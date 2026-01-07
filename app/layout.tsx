@@ -95,6 +95,8 @@ export default function RootLayout({
     <html lang="ko">
       <head>
         <meta name="google-adsense-account" content="ca-pub-7373977880685678" />
+        <meta name="google-site-verification" content="lSJTeWuV8EZQIBkHAfSRPQlK59uyaYjsnYH_DhIv2r4" />
+        <meta name="naver-site-verification" content="249ab66e366ff5b46934242c934777ed2a07507e" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
