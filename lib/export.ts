@@ -3,6 +3,13 @@ import type { InputData } from "./fees";
 import { formatCurrency, formatPercent } from "./utils";
 
 /**
+ * CSV용 숫자 포맷팅 (천 단위 구분자 없이 숫자만)
+ */
+function formatNumberForCSV(value: number): string {
+  return Math.round(value).toString();
+}
+
+/**
  * CSV로 데이터 내보내기
  */
 export function exportToCSV(
@@ -16,29 +23,31 @@ export function exportToCSV(
     ["플랫폼", platform],
     [""],
     ["=== 입력 정보 ==="],
-    ["판매가", formatCurrency(inputData.salePrice)],
-    ["원가", formatCurrency(inputData.cost)],
-    ["출고 배송비", formatCurrency(inputData.shipOut)],
-    ["포장비", formatCurrency(inputData.packaging)],
-    ["주문당 광고비", formatCurrency(inputData.adCostPerOrder)],
-    ["기타 변동비", formatCurrency(inputData.otherVariable)],
+    ["판매가", formatNumberForCSV(inputData.salePrice)],
+    ["원가", formatNumberForCSV(inputData.cost)],
+    ["출고 배송비", formatNumberForCSV(inputData.shipOut)],
+    ["포장비", formatNumberForCSV(inputData.packaging)],
+    ["주문당 광고비", formatNumberForCSV(inputData.adCostPerOrder)],
+    ["기타 변동비", formatNumberForCSV(inputData.otherVariable)],
     ["반품율", `${inputData.returnRate}%`],
-    ["반품 배송비", formatCurrency(inputData.returnShipBack)],
+    ["반품 배송비", formatNumberForCSV(inputData.returnShipBack)],
     ["플랫폼 수수료율", `${(inputData.platformFeeRate * 100).toFixed(2)}%`],
     ["결제 수수료율", `${(inputData.paymentFeeRate * 100).toFixed(2)}%`],
     ["추가 수수료율", `${(inputData.extraFeeRate * 100).toFixed(2)}%`],
     [""],
     ["=== 계산 결과 ==="],
-    ["매출 (GMV)", formatCurrency(result.gmv)],
-    ["플랫폼 수수료", formatCurrency(result.platformFee)],
-    ["결제 수수료", formatCurrency(result.paymentFee)],
-    ["추가 수수료", formatCurrency(result.extraFee)],
-    ["총 수수료", formatCurrency(result.totalFees)],
-    ["기대 반품 비용", formatCurrency(result.expectedReturnCost)],
-    ["총 비용", formatCurrency(result.totalCosts)],
-    ["실수령", formatCurrency(result.netPayout)],
+    ["매출 (GMV)", formatNumberForCSV(result.gmv)],
+    ["기본 판매 수수료", formatNumberForCSV(result.baseFee)],
+    ["연동 수수료", formatNumberForCSV(result.linkageFee)],
+    ["배송비 수수료", formatNumberForCSV(result.shippingFee)],
+    ["총 수수료", formatNumberForCSV(result.totalFees)],
+    ["부가세", formatNumberForCSV(result.vat)],
+    ["기대 반품 비용", formatNumberForCSV(result.expectedReturnCost)],
+    ["총 비용", formatNumberForCSV(result.totalCosts)],
+    ["정산금액", formatNumberForCSV(result.netPayout)],
+    ["순이익", formatNumberForCSV(result.netProfit)],
     ["실마진율", formatPercent(result.netMarginRate)],
-    ["손익분기 판매가 (BEP)", result.bep ? formatCurrency(result.bep) : "계산 불가"],
+    ["손익분기 판매가 (BEP)", result.bep ? formatNumberForCSV(result.bep) : "계산 불가"],
     [""],
     ["생성일시", new Date().toLocaleString("ko-KR")],
   ];
@@ -83,13 +92,13 @@ export function exportScenariosToCSV(
   const rows = scenarios.map((scenario) => [
     scenario.name,
     scenario.platform,
-    formatCurrency(scenario.inputData.salePrice),
-    formatCurrency(scenario.inputData.cost),
-    formatCurrency(scenario.result.totalCosts),
-    formatCurrency(scenario.result.totalFees),
-    formatCurrency(scenario.result.netPayout),
+    formatNumberForCSV(scenario.inputData.salePrice),
+    formatNumberForCSV(scenario.inputData.cost),
+    formatNumberForCSV(scenario.result.totalCosts),
+    formatNumberForCSV(scenario.result.totalFees),
+    formatNumberForCSV(scenario.result.netPayout),
     formatPercent(scenario.result.netMarginRate),
-    scenario.result.bep ? formatCurrency(scenario.result.bep) : "계산 불가",
+    scenario.result.bep ? formatNumberForCSV(scenario.result.bep) : "계산 불가",
   ]);
 
   const csvContent = [

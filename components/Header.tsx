@@ -12,7 +12,7 @@ export default function Header() {
           셀러 실마진 계산기
         </h1>
       </div>
-      <p className="text-gray-500 text-[10px] sm:text-xs flex items-center gap-1 sm:gap-1.5 ml-12 sm:ml-10 leading-tight">
+      <p className="text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs flex items-center gap-1 sm:gap-1.5 ml-12 sm:ml-10 leading-tight">
         <TrendingUp className="w-3 h-3 flex-shrink-0" />
         <span className="truncate">실마진 계산 · 플랫폼 비교 · 손익분기 분석</span>
       </p>

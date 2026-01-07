@@ -42,7 +42,7 @@ export default function AlertSystem({ result, status }: AlertSystemProps) {
     }
 
     // 손실 경고
-    if (result.netPayout < 0) {
+    if (result.netProfit < 0) {
       alertsList.push({
         type: "error",
         message: "현재 조건으로는 손실이 발생합니다. 판매가나 비용을 조정하세요.",
@@ -63,29 +63,29 @@ export default function AlertSystem({ result, status }: AlertSystemProps) {
   if (alerts.length === 0 && !showSettings) return null;
 
   return (
-    <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-700 shadow-sm">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <Bell className="w-4 h-4 text-blue-600" />
-          <h3 className="text-sm font-semibold text-gray-800">알림</h3>
+          <Bell className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">알림</h3>
           {alerts.length > 0 && (
-            <span className="px-1.5 py-0.5 bg-red-100 text-red-700 text-xs rounded-full">
+            <span className="px-1.5 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs rounded-full">
               {alerts.length}
             </span>
           )}
         </div>
         <button
           onClick={() => setShowSettings(!showSettings)}
-          className="p-1 hover:bg-gray-100 rounded transition-colors"
+          className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
         >
-          <Settings className="w-3.5 h-3.5 text-gray-600" />
+          <Settings className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
         </button>
       </div>
 
       {showSettings && (
-        <div className="mb-3 p-2 bg-gray-50 rounded border border-gray-200 space-y-2">
+        <div className="mb-3 p-2 bg-gray-50 dark:bg-gray-700/50 rounded border border-gray-200 dark:border-gray-600 space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-xs text-gray-700">알림 활성화</label>
+            <label className="text-xs text-gray-700 dark:text-gray-300">알림 활성화</label>
             <input
               type="checkbox"
               checked={settings.enableAlerts}
@@ -96,7 +96,7 @@ export default function AlertSystem({ result, status }: AlertSystemProps) {
             />
           </div>
           <div>
-            <label className="text-xs text-gray-700 block mb-1">
+            <label className="text-xs text-gray-700 dark:text-gray-300 block mb-1">
               최소 마진율 ({formatPercent(settings.minMarginRate)})
             </label>
             <input
@@ -108,11 +108,11 @@ export default function AlertSystem({ result, status }: AlertSystemProps) {
               onChange={(e) =>
                 setSettings({ ...settings, minMarginRate: parseFloat(e.target.value) })
               }
-              className="w-full"
+              className="w-full accent-blue-600 dark:accent-blue-500"
             />
           </div>
           <div>
-            <label className="text-xs text-gray-700 block mb-1">
+            <label className="text-xs text-gray-700 dark:text-gray-300 block mb-1">
               최대 수수료율 ({formatPercent(settings.maxFeeRate)})
             </label>
             <input
@@ -124,7 +124,7 @@ export default function AlertSystem({ result, status }: AlertSystemProps) {
               onChange={(e) =>
                 setSettings({ ...settings, maxFeeRate: parseFloat(e.target.value) })
               }
-              className="w-full"
+              className="w-full accent-blue-600 dark:accent-blue-500"
             />
           </div>
         </div>
@@ -137,10 +137,10 @@ export default function AlertSystem({ result, status }: AlertSystemProps) {
               key={index}
               className={`flex items-start gap-2 p-2 rounded text-xs ${
                 alert.type === "error"
-                  ? "bg-red-50 border border-red-200 text-red-700"
+                  ? "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"
                   : alert.type === "warning"
-                  ? "bg-yellow-50 border border-yellow-200 text-yellow-700"
-                  : "bg-blue-50 border border-blue-200 text-blue-700"
+                  ? "bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400"
+                  : "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400"
               }`}
             >
               {alert.type === "error" ? (
@@ -157,7 +157,7 @@ export default function AlertSystem({ result, status }: AlertSystemProps) {
       )}
 
       {alerts.length === 0 && settings.enableAlerts && (
-        <div className="flex items-center gap-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-700">
+        <div className="flex items-center gap-2 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded text-xs text-green-700 dark:text-green-400">
           <CheckCircle2 className="w-4 h-4" />
           <span>모든 지표가 정상 범위입니다</span>
         </div>

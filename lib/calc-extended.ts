@@ -9,8 +9,10 @@ export function calculateTargetPrice(
   targetMarginRate: number
 ): number {
   const targetMarginDecimal = targetMarginRate / 100;
+  // 새로운 수수료 구조 사용 (하위 호환성 고려)
   const feeRateTotal =
-    inputData.platformFeeRate + inputData.paymentFeeRate + inputData.extraFeeRate;
+    (inputData.baseFeeRate ?? inputData.platformFeeRate ?? 0) +
+    (inputData.linkageFeeRate ?? inputData.paymentFeeRate ?? 0);
   const shippingFeeRate = inputData.shippingFeeRate || 0;
 
   // 총 비용 계산 (판매가 제외)

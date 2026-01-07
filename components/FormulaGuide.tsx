@@ -11,21 +11,21 @@ export default function FormulaGuide() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-lg border border-blue-200 shadow-sm overflow-hidden"
+      className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900/20 dark:via-indigo-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800 shadow-sm overflow-hidden"
     >
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-3 sm:p-4 hover:bg-blue-100/50 transition-colors group"
+        className="w-full flex items-center justify-between p-3 sm:p-4 hover:bg-blue-100/50 dark:hover:bg-blue-900/30 transition-colors group"
       >
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-blue-600 rounded-lg">
+          <div className="p-1.5 bg-blue-600 dark:bg-blue-500 rounded-lg">
             <Calculator className="w-4 h-4 text-white" />
           </div>
           <div className="text-left">
-            <h3 className="text-sm sm:text-base font-bold text-gray-800">
+            <h3 className="text-sm sm:text-base font-bold text-gray-800 dark:text-gray-200">
               마진율은 이렇게 계산됩니다
             </h3>
-            <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-0.5">
               부가세 포함 가격으로 작성해보세요
             </p>
           </div>
@@ -33,7 +33,7 @@ export default function FormulaGuide() {
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="text-gray-400 group-hover:text-gray-600"
+          className="text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-400"
         >
           <ChevronDown className="w-5 h-5" />
         </motion.div>
@@ -49,12 +49,12 @@ export default function FormulaGuide() {
             className="overflow-hidden"
           >
             <div className="px-3 sm:px-4 pb-3 sm:pb-4 space-y-3">
-              <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
-                <h4 className="text-xs sm:text-sm font-bold text-gray-800 mb-2 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5 text-blue-600" />
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+                <h4 className="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-1.5">
+                  <Info className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                   마진율 계산 공식
                 </h4>
-                <ul className="space-y-2 text-xs sm:text-sm text-gray-700">
+                <ul className="space-y-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 font-bold mt-0.5">•</span>
                     <div>
@@ -82,12 +82,12 @@ export default function FormulaGuide() {
                 </ul>
               </div>
 
-              <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
-                <h4 className="text-xs sm:text-sm font-bold text-gray-800 mb-2 flex items-center gap-1.5">
-                  <Info className="w-3.5 h-3.5 text-green-600" />
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-gray-700">
+                <h4 className="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200 mb-2 flex items-center gap-1.5">
+                  <Info className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
                   수수료 안내
                 </h4>
-                <ul className="space-y-1.5 text-xs sm:text-sm text-gray-700">
+                <ul className="space-y-1.5 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                   <li className="flex items-start gap-2">
                     <span className="text-green-600 font-bold mt-0.5">•</span>
                     <div>

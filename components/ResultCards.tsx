@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Wallet, TrendingUp, Target, AlertCircle, CheckCircle2, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import type { CalculationResult, TrafficLightStatus } from "@/lib/calc";
@@ -10,7 +11,7 @@ interface ResultCardsProps {
   status: TrafficLightStatus;
 }
 
-export default function ResultCards({ result, status }: ResultCardsProps) {
+function ResultCards({ result, status }: ResultCardsProps) {
   const getStatusConfig = (status: TrafficLightStatus) => {
     switch (status) {
       case "RED":
@@ -60,12 +61,14 @@ export default function ResultCards({ result, status }: ResultCardsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
           className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-lg p-3 sm:p-3 text-white shadow-md"
+          role="region"
+          aria-label="정산금액"
         >
           <div className="flex items-center gap-1.5 mb-1.5 sm:mb-1">
-            <Wallet className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+            <Wallet className="w-4 h-4 sm:w-3.5 sm:h-3.5" aria-hidden="true" />
             <span className="text-xs sm:text-xs font-medium opacity-90">정산금액</span>
           </div>
-          <div className="text-base sm:text-lg md:text-xl font-bold leading-tight">
+          <div className="text-base sm:text-lg md:text-xl font-bold leading-tight" aria-live="polite">
             {formatCurrency(result.netPayout)}
           </div>
         </motion.div>
@@ -75,12 +78,14 @@ export default function ResultCards({ result, status }: ResultCardsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.05 }}
           className="relative overflow-hidden bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg p-3 sm:p-3 text-white shadow-md"
+          role="region"
+          aria-label="순이익"
         >
           <div className="flex items-center gap-1.5 mb-1.5 sm:mb-1">
-            <TrendingUp className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+            <TrendingUp className="w-4 h-4 sm:w-3.5 sm:h-3.5" aria-hidden="true" />
             <span className="text-xs sm:text-xs font-medium opacity-90">순이익</span>
           </div>
-          <div className="text-base sm:text-lg md:text-xl font-bold leading-tight">
+          <div className="text-base sm:text-lg md:text-xl font-bold leading-tight" aria-live="polite">
             {formatCurrency(result.netProfit ?? result.netPayout)}
           </div>
         </motion.div>
@@ -143,16 +148,16 @@ export default function ResultCards({ result, status }: ResultCardsProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm"
+          className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-700 shadow-sm"
         >
           <div className="flex items-center gap-1.5 mb-1.5">
-            <Target className="w-3.5 h-3.5 text-gray-600" />
-            <span className="text-xs font-medium text-gray-700">BEP</span>
+            <Target className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">BEP</span>
           </div>
           {result.bep === null ? (
-            <div className="text-xs text-red-600 font-medium">계산 불가</div>
+            <div className="text-xs text-red-600 dark:text-red-400 font-medium">계산 불가</div>
           ) : (
-            <div className="text-base font-bold text-gray-900">
+            <div className="text-base font-bold text-gray-900 dark:text-gray-100">
               {formatCurrency(result.bep)}
             </div>
           )}
@@ -162,17 +167,19 @@ export default function ResultCards({ result, status }: ResultCardsProps) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.3, delay: 0.3 }}
-          className={`relative overflow-hidden bg-gradient-to-br ${statusConfig.bgGradient} border ${statusConfig.borderColor} rounded-lg p-3 shadow-sm`}
+          className={`relative overflow-hidden bg-gradient-to-br ${statusConfig.bgGradient} dark:from-gray-700 dark:to-gray-800 border ${statusConfig.borderColor} dark:border-gray-600 rounded-lg p-3 shadow-sm`}
         >
           <div className="flex items-center gap-1.5 mb-1">
-            <StatusIcon className={`w-3.5 h-3.5 ${statusConfig.iconColor}`} />
+            <StatusIcon className={`w-3.5 h-3.5 ${statusConfig.iconColor} dark:text-gray-300`} />
             <span className={`text-xs font-bold px-2 py-0.5 rounded bg-gradient-to-r ${statusConfig.gradient} text-white`}>
               {statusConfig.badge}
             </span>
           </div>
-          <p className="text-xs text-gray-700 leading-tight">{statusConfig.message}</p>
+          <p className="text-xs text-gray-700 dark:text-gray-300 leading-tight">{statusConfig.message}</p>
         </motion.div>
       </div>
     </div>
   );
 }
+
+export default memo(ResultCards);

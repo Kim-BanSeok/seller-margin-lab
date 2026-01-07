@@ -59,49 +59,57 @@ export default function ChartSection({ result, salePrice }: ChartSectionProps) {
     <div className="space-y-3 animate-fade-in">
       {/* 파이 차트 - 비용 구성 */}
       <div className="bg-white rounded-lg p-3 border border-gray-200 shadow-sm">
-        <h3 className="text-xs font-semibold text-gray-800 mb-2">매출 구성</h3>
-        <ResponsiveContainer width="100%" height={200}>
-          <PieChart>
-            <Pie
-              data={pieData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`}
-              outerRadius={100}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {pieData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-            <Tooltip
-              formatter={(value: number) => formatCurrency(value)}
-              contentStyle={{
-                backgroundColor: "white",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-              }}
-            />
-            <Legend wrapperStyle={{ fontSize: "11px" }} />
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="mt-2 space-y-1">
-          {pieData.map((item, index) => (
-            <div key={index} className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1.5">
-                <div
-                  className="w-3 h-3 rounded"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="text-gray-700">{item.name}</span>
-              </div>
-              <span className="font-medium text-gray-900">
-                {formatCurrency(item.value)}
-              </span>
-            </div>
-          ))}
+        <h3 className="text-xs font-semibold text-gray-800 mb-3">매출 구성</h3>
+        <div className="flex flex-col items-center">
+          <ResponsiveContainer width="100%" height={240}>
+            <PieChart>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={false}
+                outerRadius={80}
+                innerRadius={0}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip
+                formatter={(value: number) => formatCurrency(value)}
+                contentStyle={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "8px",
+                  fontSize: "12px",
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="mt-4 w-full space-y-2">
+            {pieData.map((item, index) => {
+              const total = pieData.reduce((sum, d) => sum + d.value, 0);
+              const percent = total > 0 ? ((item.value / total) * 100).toFixed(1) : "0.0";
+              return (
+                <div key={index} className="flex items-center justify-between text-xs px-2">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-4 h-4 rounded flex-shrink-0"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <span className="text-gray-700 font-medium">{item.name}</span>
+                    <span className="text-gray-500">({percent}%)</span>
+                  </div>
+                  <span className="font-semibold text-gray-900">
+                    {formatCurrency(item.value)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 

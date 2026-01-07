@@ -9,6 +9,10 @@ import toast from "react-hot-toast";
 
 interface CustomPresetManagerProps {
   currentFees: {
+    baseFeeRate: number;
+    linkageFeeRate: number;
+    shippingFeeRate: number;
+    // 하위 호환
     platformFeeRate: number;
     paymentFeeRate: number;
     extraFeeRate: number;
@@ -38,6 +42,10 @@ export default function CustomPresetManager({
 
     saveCustomPreset({
       name: presetName,
+      baseFeeRate: currentFees.baseFeeRate,
+      linkageFeeRate: currentFees.linkageFeeRate,
+      shippingFeeRate: currentFees.shippingFeeRate,
+      // 하위 호환
       platformFeeRate: currentFees.platformFeeRate,
       paymentFeeRate: currentFees.paymentFeeRate,
       extraFeeRate: currentFees.extraFeeRate,
@@ -121,9 +129,9 @@ export default function CustomPresetManager({
                   <div className="flex-1">
                     <div className="font-medium text-sm text-gray-800">{preset.name}</div>
                     <div className="text-xs text-gray-500 mt-0.5">
-                      플랫폼 {formatPercent(preset.platformFeeRate)} · 결제{" "}
-                      {formatPercent(preset.paymentFeeRate)} · 추가{" "}
-                      {formatPercent(preset.extraFeeRate)}
+                      기본 {formatPercent((preset.baseFeeRate ?? preset.platformFeeRate) * 100)} · 연동{" "}
+                      {formatPercent((preset.linkageFeeRate ?? preset.paymentFeeRate) * 100)} · 배송{" "}
+                      {formatPercent((preset.shippingFeeRate ?? 0) * 100)}
                     </div>
                   </div>
                   <div className="flex gap-1">

@@ -25,8 +25,10 @@ import CustomPresetManager from "@/components/CustomPresetManager";
 import ReportGenerator from "@/components/ReportGenerator";
 import LightModeView from "@/components/LightModeView";
 import FormulaGuide from "@/components/FormulaGuide";
+import AdBanner from "@/components/AdBanner";
 import { saveCalculation } from "@/lib/storage";
 import type { SavedCalculation, CustomPreset } from "@/lib/storage";
+import { downloadJSON, importFromJSON } from "@/lib/export";
 import toast from "react-hot-toast";
 
 const ChartSection = dynamic(() => import("@/components/ChartSection"), {
@@ -51,6 +53,7 @@ function HomeContent() {
   const reportRef = useRef<HTMLDivElement>(null);
   const [activeFeatureTab, setActiveFeatureTab] = useState<FeatureTab>("main");
   const [isLightMode, setIsLightMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [comparePlatforms, setComparePlatforms] = useState<[Platform, Platform]>(["smartstore", "coupang"]);
 
   // 초기 상태 설정
@@ -83,6 +86,52 @@ function HomeContent() {
   };
 
   const [state, setState] = useState(getInitialState);
+
+  // 다크 모드 초기화
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode === "true") {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  // 다크 모드 토글
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("darkMode", "true");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("darkMode", "false");
+    }
+  }, [isDarkMode]);
+
+  // 키보드 단축키
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + R: 리셋
+      if ((e.ctrlKey || e.metaKey) && e.key === "r") {
+        e.preventDefault();
+        handleReset();
+        toast.success("초기화되었습니다");
+      }
+      // Ctrl/Cmd + S: 저장
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        handleSaveCalculation();
+      }
+      // Ctrl/Cmd + D: 다크 모드 토글
+      if ((e.ctrlKey || e.metaKey) && e.key === "d") {
+        e.preventDefault();
+        setIsDarkMode((prev) => !prev);
+        toast.success(isDarkMode ? "라이트 모드로 전환" : "다크 모드로 전환");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isDarkMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const restored = deserializeState(searchParams);
@@ -162,6 +211,48 @@ function HomeContent() {
     toast.success("계산 결과가 저장되었습니다");
   };
 
+  const handleExportJSON = () => {
+    try {
+      downloadJSON(
+        state.inputData,
+        currentResult,
+        state.platform === "compare" ? "compare" : state.platform
+      );
+      toast.success("JSON 파일이 다운로드되었습니다");
+    } catch (error) {
+      toast.error("JSON 내보내기에 실패했습니다");
+      console.error(error);
+    }
+  };
+
+  const handleImportJSON = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const jsonString = event.target?.result as string;
+        const imported = importFromJSON(jsonString);
+        
+        if (imported) {
+          setState({
+            platform: imported.platform as Platform | "compare",
+            inputData: imported.inputData,
+          });
+          toast.success("JSON 파일을 가져왔습니다");
+        } else {
+          toast.error("잘못된 JSON 파일입니다");
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
+
   const handleLoadCalculation = (calc: SavedCalculation) => {
     setState({
       platform: calc.platform,
@@ -174,6 +265,10 @@ function HomeContent() {
       ...prev,
       inputData: {
         ...prev.inputData,
+        baseFeeRate: preset.baseFeeRate ?? preset.platformFeeRate,
+        linkageFeeRate: preset.linkageFeeRate ?? preset.paymentFeeRate,
+        shippingFeeRate: preset.shippingFeeRate ?? 0,
+        // 하위 호환
         platformFeeRate: preset.platformFeeRate,
         paymentFeeRate: preset.paymentFeeRate,
         extraFeeRate: preset.extraFeeRate,
@@ -261,22 +356,46 @@ function HomeContent() {
           <div className="flex-1 min-w-0">
             <Header />
           </div>
-          <div className="flex gap-1.5 sm:gap-2 w-full sm:w-auto">
+          <div className="flex gap-1.5 sm:gap-2 w-full sm:w-auto no-print">
             <button
               onClick={() => setIsLightMode(!isLightMode)}
               className={`px-3 sm:px-3 py-2 sm:py-1.5 text-xs sm:text-xs rounded transition-colors flex-1 sm:flex-none min-w-[80px] sm:min-w-0 ${
                 isLightMode
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  ? "bg-blue-600 text-white dark:bg-blue-700"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
               }`}
+              aria-label="라이트 모드 토글"
             >
               {isLightMode ? "상세 모드" : "라이트 모드"}
             </button>
             <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="px-3 sm:px-3 py-2 sm:py-1.5 text-xs sm:text-xs rounded transition-colors flex-1 sm:flex-none min-w-[60px] sm:min-w-0 bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+              aria-label="다크 모드 토글"
+              title="Ctrl/Cmd + D"
+            >
+              {isDarkMode ? "☀️" : "🌙"}
+            </button>
+            <button
               onClick={handleSaveCalculation}
-              className="px-3 sm:px-3 py-2 sm:py-1.5 bg-green-600 text-white text-xs sm:text-xs rounded hover:bg-green-700 transition-colors flex-1 sm:flex-none min-w-[60px] sm:min-w-0"
+              className="px-3 sm:px-3 py-2 sm:py-1.5 bg-green-600 text-white text-xs sm:text-xs rounded hover:bg-green-700 transition-colors flex-1 sm:flex-none min-w-[60px] sm:min-w-0 dark:bg-green-700 dark:hover:bg-green-800"
+              title="Ctrl/Cmd + S"
             >
               저장
+            </button>
+            <button
+              onClick={handleExportJSON}
+              className="px-3 sm:px-3 py-2 sm:py-1.5 bg-purple-600 text-white text-xs sm:text-xs rounded hover:bg-purple-700 transition-colors flex-1 sm:flex-none min-w-[60px] sm:min-w-0 dark:bg-purple-700 dark:hover:bg-purple-800"
+              title="JSON 내보내기"
+            >
+              내보내기
+            </button>
+            <button
+              onClick={handleImportJSON}
+              className="px-3 sm:px-3 py-2 sm:py-1.5 bg-indigo-600 text-white text-xs sm:text-xs rounded hover:bg-indigo-700 transition-colors flex-1 sm:flex-none min-w-[60px] sm:min-w-0 dark:bg-indigo-700 dark:hover:bg-indigo-800"
+              title="JSON 가져오기"
+            >
+              가져오기
             </button>
             <div className="flex-shrink-0">
               <ActionButtons onReset={handleReset} shareUrl={shareUrl} />
@@ -291,7 +410,7 @@ function HomeContent() {
         >
           {isLightMode ? (
             // 라이트 모드
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto space-y-3">
               <LightModeView
                 platform={state.platform}
                 inputData={state.inputData}
@@ -300,6 +419,7 @@ function HomeContent() {
                 onPlatformChange={handlePlatformChange}
                 onInputChange={handleInputChange}
               />
+              <AdBanner />
             </div>
           ) : (
             // 일반 모드
@@ -313,22 +433,32 @@ function HomeContent() {
           </div>
 
           {activeFeatureTab === "history" && (
-            <HistoryPanel
-              onLoad={handleLoadCalculation}
-              onClose={() => setActiveFeatureTab("main")}
-            />
+            <>
+              <AdBanner className="mb-3" />
+              <HistoryPanel
+                onLoad={handleLoadCalculation}
+                onClose={() => setActiveFeatureTab("main")}
+              />
+            </>
           )}
 
           {activeFeatureTab === "preset" && (
-            <CustomPresetManager
-              currentFees={{
-                platformFeeRate: state.inputData.platformFeeRate,
-                paymentFeeRate: state.inputData.paymentFeeRate,
-                extraFeeRate: state.inputData.extraFeeRate,
-              }}
-              onSelect={handleSelectPreset}
-              onClose={() => setActiveFeatureTab("main")}
-            />
+            <>
+              <AdBanner className="mb-3" />
+              <CustomPresetManager
+                currentFees={{
+                  baseFeeRate: state.inputData.baseFeeRate,
+                  linkageFeeRate: state.inputData.linkageFeeRate,
+                  shippingFeeRate: state.inputData.shippingFeeRate || 0,
+                  // 하위 호환
+                  platformFeeRate: state.inputData.platformFeeRate,
+                  paymentFeeRate: state.inputData.paymentFeeRate,
+                  extraFeeRate: state.inputData.extraFeeRate,
+                }}
+                onSelect={handleSelectPreset}
+                onClose={() => setActiveFeatureTab("main")}
+              />
+            </>
           )}
 
           {!isCompareMode && (
@@ -336,61 +466,78 @@ function HomeContent() {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-white p-4 rounded-lg border border-gray-200 shadow-md"
+                className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md"
               >
-                <h2 className="text-sm font-semibold text-gray-700 mb-3">입력 정보</h2>
+                <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">입력 정보</h2>
                 <InputForm inputData={state.inputData} onInputChange={handleInputChange} />
               </motion.div>
 
               <div className="space-y-3">
                 {activeFeatureTab === "main" && (
                   <>
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="bg-white p-3 sm:p-4 rounded-lg border border-gray-200 shadow-md"
-                    >
-                      <h2 className="text-sm sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3">계산 결과</h2>
-                      <ResultCards result={currentResult} status={currentStatus} />
-                    </motion.div>
+                    <div ref={reportRef} className="space-y-2.5 sm:space-y-3">
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md"
+                      >
+                        <h2 className="text-sm sm:text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">계산 결과</h2>
+                        <ResultCards result={currentResult} status={currentStatus} />
+                      </motion.div>
 
-                    <AlertSystem result={currentResult} status={currentStatus} />
+                      <AlertSystem result={currentResult} status={currentStatus} />
 
-                    <FormulaGuide />
+                      <AdBanner className="my-3" />
 
-                    <BreakdownTable result={currentResult} inputData={state.inputData} />
+                      <FormulaGuide />
 
-                    <ChartSection result={currentResult} salePrice={state.inputData.salePrice} />
+                      <BreakdownTable result={currentResult} inputData={state.inputData} />
 
-                    <div ref={reportRef}>
-                      <ReportGenerator
-                        inputData={state.inputData}
-                        result={currentResult}
-                        platform={state.platform as Platform}
-                        reportRef={reportRef}
-                      />
+                      <ChartSection result={currentResult} salePrice={state.inputData.salePrice} />
                     </div>
+
+                    <ReportGenerator
+                      inputData={state.inputData}
+                      result={currentResult}
+                      platform={state.platform as Platform}
+                      reportRef={reportRef}
+                    />
                   </>
                 )}
 
                 {activeFeatureTab === "target" && (
-                  <TargetMarginCalculator inputData={state.inputData} />
+                  <>
+                    <AdBanner className="mb-3" />
+                    <TargetMarginCalculator inputData={state.inputData} />
+                  </>
                 )}
 
                 {activeFeatureTab === "simulation" && (
-                  <SalesSimulation inputData={state.inputData} />
+                  <>
+                    <AdBanner className="mb-3" />
+                    <SalesSimulation inputData={state.inputData} />
+                  </>
                 )}
 
                 {activeFeatureTab === "forecast" && (
-                  <MonthlyForecast inputData={state.inputData} />
+                  <>
+                    <AdBanner className="mb-3" />
+                    <MonthlyForecast inputData={state.inputData} />
+                  </>
                 )}
 
                 {activeFeatureTab === "roi" && (
-                  <ROICalculator inputData={state.inputData} />
+                  <>
+                    <AdBanner className="mb-3" />
+                    <ROICalculator inputData={state.inputData} />
+                  </>
                 )}
 
                 {activeFeatureTab === "scenario" && (
-                  <ScenarioCompare baseInputData={state.inputData} />
+                  <>
+                    <AdBanner className="mb-3" />
+                    <ScenarioCompare baseInputData={state.inputData} />
+                  </>
                 )}
               </div>
             </div>
@@ -445,6 +592,8 @@ function HomeContent() {
                       platform2Status={platform2Status}
                     />
                   </motion.div>
+
+                  <AdBanner className="my-3" />
 
                   <ChartSection result={currentResult} salePrice={state.inputData.salePrice} />
                 </div>

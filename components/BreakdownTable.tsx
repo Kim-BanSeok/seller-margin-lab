@@ -22,22 +22,22 @@ export default function BreakdownTable({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden"
+      className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden"
     >
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-3 sm:px-3 py-3 sm:py-2 flex items-center justify-between text-left hover:bg-gray-50 transition-colors group min-h-[44px] sm:min-h-0"
+        className="w-full px-3 sm:px-3 py-3 sm:py-2 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group min-h-[44px] sm:min-h-0"
       >
         <div className="flex items-center gap-2">
           <div className="p-1 bg-gradient-to-br from-blue-500 to-indigo-600 rounded">
             <Receipt className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="font-medium text-gray-800 text-sm">상세 내역</span>
+          <span className="font-medium text-gray-800 dark:text-gray-200 text-sm">상세 내역</span>
         </div>
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
           transition={{ duration: 0.2 }}
-          className="text-gray-400 group-hover:text-gray-600"
+          className="text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-400"
         >
           <ChevronDown className="w-4 h-4" />
         </motion.div>
@@ -52,36 +52,36 @@ export default function BreakdownTable({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="px-3 pb-3 space-y-3 border-t border-gray-100">
+            <div className="px-3 pb-3 space-y-3 border-t border-gray-100 dark:border-gray-700">
               {/* 매출 */}
               <div className="pt-2">
                 <div className="flex items-center gap-1.5 mb-2">
-                  <DollarSign className="w-3.5 h-3.5 text-green-600" />
-                  <h4 className="text-xs font-semibold text-gray-800">매출</h4>
+                  <DollarSign className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
+                  <h4 className="text-xs font-semibold text-gray-800 dark:text-gray-200">매출</h4>
                 </div>
                 <div className="space-y-1">
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded p-2 border border-green-100">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-2 border border-green-100 dark:border-green-800">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-700">판매가</span>
-                      <span className="text-sm font-bold text-gray-900">
+                      <span className="text-xs text-gray-700 dark:text-gray-300">판매가</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
                         {formatCurrency(inputData.salePrice)}
                       </span>
                     </div>
                   </div>
                   {inputData.receivedShipping > 0 && (
-                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded p-2 border border-green-100">
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-2 border border-green-100 dark:border-green-800">
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-700">받은 배송비</span>
-                        <span className="text-sm font-bold text-gray-900">
+                        <span className="text-xs text-gray-700 dark:text-gray-300">받은 배송비</span>
+                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
                           {formatCurrency(inputData.receivedShipping)}
                         </span>
                       </div>
                     </div>
                   )}
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded p-2 border-2 border-green-200">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded p-2 border-2 border-green-200 dark:border-green-700">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-semibold text-gray-800">총 매출 (GMV)</span>
-                      <span className="text-sm font-bold text-gray-900">
+                      <span className="text-xs font-semibold text-gray-800 dark:text-gray-200">총 매출 (GMV)</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
                         {formatCurrency(result.gmv)}
                       </span>
                     </div>
@@ -92,8 +92,8 @@ export default function BreakdownTable({
               {/* 수수료 */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <Receipt className="w-3.5 h-3.5 text-blue-600" />
-                  <h4 className="text-xs font-semibold text-gray-800">수수료</h4>
+                  <Receipt className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                  <h4 className="text-xs font-semibold text-gray-800 dark:text-gray-200">수수료</h4>
                 </div>
                 <div className="space-y-1.5">
                   {[
@@ -139,27 +139,27 @@ export default function BreakdownTable({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className={`bg-gradient-to-r ${item.color} rounded p-2 border ${item.borderColor} transition-shadow`}
+                      className={`bg-gradient-to-r ${item.color} dark:from-gray-700/50 dark:to-gray-800/50 rounded p-2 border ${item.borderColor} dark:border-gray-600 transition-shadow`}
                     >
                       <div className="flex justify-between items-center">
                         <div>
-                          <span className="text-xs font-medium text-gray-700">
+                          <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                             {item.label}
                           </span>
-                          <span className="text-xs text-gray-500 ml-1.5">
+                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1.5">
                             ({formatPercent(item.rate)})
                           </span>
                         </div>
-                        <span className="text-xs font-bold text-gray-900">
+                        <span className="text-xs font-bold text-gray-900 dark:text-gray-100">
                           {formatCurrency(item.value)}
                         </span>
                       </div>
                     </motion.div>
                   ))}
-                  <div className="mt-2 pt-2 border-t border-gray-300 bg-gray-50 rounded p-2">
+                  <div className="mt-2 pt-2 border-t border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 rounded p-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-gray-800">총 수수료</span>
-                      <span className="text-sm font-bold text-gray-900">
+                      <span className="text-xs font-bold text-gray-800 dark:text-gray-200">총 수수료</span>
+                      <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
                         {formatCurrency(result.totalFees)}
                       </span>
                     </div>
@@ -170,8 +170,8 @@ export default function BreakdownTable({
               {/* 비용 */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <Package className="w-3.5 h-3.5 text-red-600" />
-                  <h4 className="text-xs font-semibold text-gray-800">비용</h4>
+                  <Package className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+                  <h4 className="text-xs font-semibold text-gray-800 dark:text-gray-200">비용</h4>
                 </div>
                 <div className="space-y-1.5">
                   {[
@@ -186,11 +186,11 @@ export default function BreakdownTable({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.03 }}
-                      className="bg-gray-50 rounded p-2 border border-gray-200 transition-all"
+                      className="bg-gray-50 dark:bg-gray-700/50 rounded p-2 border border-gray-200 dark:border-gray-600 transition-all"
                     >
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-700">{item.label}</span>
-                        <span className="text-xs font-medium text-gray-900">
+                        <span className="text-xs text-gray-700 dark:text-gray-300">{item.label}</span>
+                        <span className="text-xs font-medium text-gray-900 dark:text-gray-100">
                           {formatCurrency(item.value)}
                         </span>
                       </div>
@@ -200,27 +200,27 @@ export default function BreakdownTable({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.15 }}
-                    className="bg-gradient-to-r from-amber-50 to-orange-50 rounded p-2 border border-amber-100"
+                    className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded p-2 border border-amber-100 dark:border-amber-800"
                   >
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="text-xs font-medium text-gray-700">
+                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                           기대 반품 비용
                         </span>
-                        <span className="text-xs text-gray-500 ml-1">
+                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
                           ({inputData.returnRate.toFixed(1)}% ×{" "}
                           {formatCurrency(inputData.returnShipBack)})
                         </span>
                       </div>
-                      <span className="text-xs font-bold text-gray-900">
+                      <span className="text-xs font-bold text-gray-900 dark:text-gray-100">
                         {formatCurrency(result.expectedReturnCost)}
                       </span>
                     </div>
                   </motion.div>
-                  <div className="mt-2 pt-2 border-t border-gray-300 bg-red-50 rounded p-2">
+                  <div className="mt-2 pt-2 border-t border-gray-300 dark:border-gray-600 bg-red-50 dark:bg-red-900/20 rounded p-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-gray-800">총 비용</span>
-                      <span className="text-sm font-bold text-red-700">
+                      <span className="text-xs font-bold text-gray-800 dark:text-gray-200">총 비용</span>
+                      <span className="text-sm font-bold text-red-700 dark:text-red-400">
                         {formatCurrency(result.totalCosts)}
                       </span>
                     </div>

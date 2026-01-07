@@ -39,11 +39,11 @@ export default function PlatformDropdown({
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
       >
         <span>{selectedName}</span>
         <ChevronDown
-          className={`w-4 h-4 text-gray-500 transition-transform ${
+          className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform ${
             isOpen ? "transform rotate-180" : ""
           }`}
         />
@@ -55,7 +55,7 @@ export default function PlatformDropdown({
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 max-h-64 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20 max-h-64 overflow-y-auto">
             {platforms.map((p) => (
               <button
                 key={p.id}
@@ -63,8 +63,8 @@ export default function PlatformDropdown({
                   onPlatformChange(p.id);
                   setIsOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
-                  platform === p.id ? "bg-blue-50 text-blue-700 font-medium" : "text-gray-700"
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                  platform === p.id ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium" : "text-gray-700 dark:text-gray-300"
                 }`}
               >
                 {p.name}

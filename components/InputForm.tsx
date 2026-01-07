@@ -72,14 +72,14 @@ function InputField({
   };
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
-          {icon}
-          <span>{label}</span>
-          <Tooltip content={tooltip} />
-        </label>
-      </div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+            {icon}
+            <span>{label}</span>
+            <Tooltip content={tooltip} />
+          </label>
+        </div>
 
       {/* 빠른 입력 버튼 */}
       {quickButtons && quickButtons.length > 0 && (
@@ -90,12 +90,20 @@ function InputField({
               onClick={() => onChange(btnValue)}
               className={`px-2 py-0.5 text-xs rounded transition-all ${
                 value === btnValue
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "bg-blue-600 dark:bg-blue-700 text-white shadow-sm"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
               }`}
               type="button"
+              aria-label={`${label} ${btnValue.toLocaleString()}${suffix}로 설정`}
+              aria-pressed={value === btnValue}
             >
-              {suffix === "%" ? `${btnValue}%` : `${(btnValue / 10000).toFixed(0)}만`}
+              {suffix === "%" 
+                ? `${btnValue}%` 
+                : btnValue >= 10000 
+                  ? `${(btnValue / 10000).toFixed(1).replace(/\.0$/, "")}만`
+                  : btnValue >= 1000
+                    ? `${(btnValue / 1000).toFixed(1).replace(/\.0$/, "")}천`
+                    : `${btnValue.toLocaleString()}`}
             </button>
           ))}
         </div>
@@ -110,16 +118,21 @@ function InputField({
             max={sliderMax}
             value={value}
             onChange={(e) => onChange(parseFloat(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-500"
+            aria-label={`${label} 슬라이더`}
+            aria-valuemin={sliderMin}
+            aria-valuemax={sliderMax}
+            aria-valuenow={value}
+            aria-valuetext={`${formatDisplayValue(value)}${suffix}`}
             style={{
               background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${
                 ((value - sliderMin) / (sliderMax - sliderMin)) * 100
               }%, #e5e7eb ${((value - sliderMin) / (sliderMax - sliderMin)) * 100}%, #e5e7eb 100%)`,
             }}
           />
-          <div className="flex justify-between text-xs text-gray-500 mt-1">
+          <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
             <span>{sliderMin.toLocaleString()}</span>
-            <span className="font-medium text-blue-600">{formatDisplayValue(value)}</span>
+            <span className="font-medium text-blue-600 dark:text-blue-400">{formatDisplayValue(value)}</span>
             <span>{sliderMax.toLocaleString()}</span>
           </div>
         </div>
@@ -129,10 +142,11 @@ function InputField({
       <div className="flex gap-1.5">
         <button
           onClick={handleDecrement}
-          className="px-2 py-1.5 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded transition-colors flex-shrink-0"
+          className="px-2 py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 rounded transition-colors flex-shrink-0"
           type="button"
+          aria-label={`${label} 감소`}
         >
-          <Minus className="w-3.5 h-3.5" />
+          <Minus className="w-3.5 h-3.5" aria-hidden="true" />
         </button>
         <div className="flex-1 relative">
           <input
@@ -154,8 +168,10 @@ function InputField({
                 e.target.value = formatDisplayValue(value);
               }
             }}
-            className="w-full px-3 sm:px-3 py-2.5 sm:py-1.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-right text-sm sm:text-sm font-medium"
+            className="w-full px-3 sm:px-3 py-2.5 sm:py-1.5 border border-gray-300 dark:border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400 bg-white dark:bg-gray-800 text-right text-sm sm:text-sm font-medium text-gray-900 dark:text-gray-100"
             placeholder="0"
+            aria-label={label}
+            aria-describedby={tooltip ? `${label}-tooltip` : undefined}
           />
           {suffix && value > 0 && (
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none">
@@ -165,10 +181,11 @@ function InputField({
         </div>
         <button
           onClick={handleIncrement}
-          className="px-2.5 sm:px-2 py-2.5 sm:py-1.5 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded transition-colors flex-shrink-0 min-w-[44px] sm:min-w-0"
+          className="px-2.5 sm:px-2 py-2.5 sm:py-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 active:bg-gray-300 dark:active:bg-gray-500 rounded transition-colors flex-shrink-0 min-w-[44px] sm:min-w-0"
           type="button"
+          aria-label={`${label} 증가`}
         >
-          <Plus className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+          <Plus className="w-4 h-4 sm:w-3.5 sm:h-3.5" aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -187,7 +204,7 @@ export default function InputForm({ inputData, onInputChange }: InputFormProps) 
   return (
     <div className="space-y-3 animate-slide-up">
       {/* 판매가 */}
-      <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+      <div className="p-3 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
         <InputField
           label="판매가"
           value={inputData.salePrice}
@@ -203,7 +220,7 @@ export default function InputForm({ inputData, onInputChange }: InputFormProps) 
       </div>
 
       {/* 받은 배송비 */}
-      <div className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-100">
+      <div className="p-3 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg border border-green-100 dark:border-green-800">
         <InputField
           label="받은 배송비"
           value={inputData.receivedShipping || 0}
@@ -219,10 +236,10 @@ export default function InputForm({ inputData, onInputChange }: InputFormProps) 
       </div>
 
       {/* 비용 항목 */}
-      <div className="space-y-3">
+      <div className="space-y-3 pt-3 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-2 mb-2">
-          <Package className="w-4 h-4 text-gray-600" />
-          <h3 className="text-sm font-semibold text-gray-800">비용 항목</h3>
+          <Package className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">비용 항목</h3>
         </div>
 
         <div className="space-y-3">
@@ -322,10 +339,10 @@ export default function InputForm({ inputData, onInputChange }: InputFormProps) 
       </div>
 
       {/* 수수료 항목 */}
-      <div className="space-y-3 pt-3 border-t border-gray-200">
+      <div className="space-y-3 pt-3 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-2 mb-2">
-          <CreditCard className="w-4 h-4 text-gray-600" />
-          <h3 className="text-sm font-semibold text-gray-800">수수료 항목</h3>
+          <CreditCard className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">수수료 항목</h3>
         </div>
 
         <div className="space-y-3">
@@ -380,15 +397,15 @@ export default function InputForm({ inputData, onInputChange }: InputFormProps) 
       </div>
 
       {/* 부가세 설정 */}
-      <div className="space-y-3 pt-3 border-t border-gray-200">
+      <div className="space-y-3 pt-3 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-2 mb-2">
-          <Percent className="w-4 h-4 text-gray-600" />
-          <h3 className="text-sm font-semibold text-gray-800">부가세 설정</h3>
+          <Percent className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200">부가세 설정</h3>
         </div>
 
         <div className="space-y-3">
           <div>
-            <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
               과세 유형
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -397,8 +414,8 @@ export default function InputForm({ inputData, onInputChange }: InputFormProps) 
                 onClick={() => handleChange("taxType", "general")}
                 className={`px-3 py-2 rounded-lg border-2 transition-all text-sm font-medium ${
                   (inputData.taxType ?? "general") === "general"
-                    ? "border-blue-600 bg-blue-50 text-blue-700"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                    ? "border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                    : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500"
                 }`}
               >
                 일반 과세자
@@ -411,8 +428,8 @@ export default function InputForm({ inputData, onInputChange }: InputFormProps) 
                 }}
                 className={`px-3 py-2 rounded-lg border-2 transition-all text-sm font-medium ${
                   (inputData.taxType ?? "general") === "simple"
-                    ? "border-blue-600 bg-blue-50 text-blue-700"
-                    : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                    ? "border-blue-600 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                    : "border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-500"
                 }`}
               >
                 간이 과세자

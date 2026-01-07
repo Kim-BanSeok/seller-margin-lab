@@ -44,14 +44,17 @@ export default function FeatureTabs({ activeTab, onTabChange }: FeatureTabsProps
       <div className="sm:hidden">
         <button
           onClick={() => setIsMobileDropdownOpen(!isMobileDropdownOpen)}
-          className="w-full flex items-center justify-between px-3 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between px-3 py-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          aria-label="기능 탭 선택"
+          aria-expanded={isMobileDropdownOpen}
+          aria-haspopup="listbox"
         >
           <div className="flex items-center gap-2">
             {activeTabData.icon}
             <span>{activeTabData.label}</span>
           </div>
           <ChevronDown
-            className={`w-4 h-4 text-gray-500 transition-transform ${
+            className={`w-4 h-4 text-gray-500 dark:text-gray-400 transition-transform ${
               isMobileDropdownOpen ? "transform rotate-180" : ""
             }`}
           />
@@ -63,7 +66,11 @@ export default function FeatureTabs({ activeTab, onTabChange }: FeatureTabsProps
               className="fixed inset-0 z-10 bg-black/20"
               onClick={() => setIsMobileDropdownOpen(false)}
             />
-            <div className="absolute left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-20 max-h-80 overflow-y-auto">
+            <div 
+              className="absolute left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20 max-h-80 overflow-y-auto"
+              role="listbox"
+              aria-label="기능 탭 목록"
+            >
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
@@ -71,11 +78,14 @@ export default function FeatureTabs({ activeTab, onTabChange }: FeatureTabsProps
                     onTabChange(tab.id);
                     setIsMobileDropdownOpen(false);
                   }}
-                  className={`w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-gray-50 transition-colors ${
+                  className={`w-full flex items-center gap-2 px-4 py-3 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
                     activeTab === tab.id
-                      ? "bg-blue-50 text-blue-700 font-medium border-l-2 border-blue-600"
-                      : "text-gray-700"
+                      ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium border-l-2 border-blue-600 dark:border-blue-500"
+                      : "text-gray-700 dark:text-gray-300"
                   }`}
+                  role="option"
+                  aria-selected={activeTab === tab.id}
+                  aria-label={tab.label}
                 >
                   {tab.icon}
                   <span>{tab.label}</span>
@@ -94,9 +104,12 @@ export default function FeatureTabs({ activeTab, onTabChange }: FeatureTabsProps
             onClick={() => onTabChange(tab.id)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
               activeTab === tab.id
-                ? "bg-blue-600 text-white shadow-sm"
-                : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
+                ? "bg-blue-600 dark:bg-blue-500 text-white shadow-sm"
+                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600"
             }`}
+            aria-label={tab.label}
+            aria-pressed={activeTab === tab.id}
+            role="tab"
           >
             {tab.icon}
             <span>{tab.label}</span>

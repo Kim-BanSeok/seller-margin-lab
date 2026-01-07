@@ -24,16 +24,18 @@ export interface CalculationResult {
 export type TrafficLightStatus = "RED" | "YELLOW" | "GREEN";
 
 /**
- * 숫자를 0 이상으로 보정
+ * 숫자를 0 이상으로 보정 (NaN, Infinity 처리 포함)
  */
 function clampNonNegative(value: number): number {
+  if (!Number.isFinite(value) || isNaN(value)) return 0;
   return Math.max(0, value);
 }
 
 /**
- * 수수료율을 0~1 범위로 보정
+ * 수수료율을 0~1 범위로 보정 (NaN, Infinity 처리 포함)
  */
 function clampFeeRate(value: number): number {
+  if (!Number.isFinite(value) || isNaN(value)) return 0;
   return Math.max(0, Math.min(1, value));
 }
 

@@ -124,10 +124,10 @@ export default function ComparisonView({
             </div>
           </div>
 
-          <div className={`bg-gradient-to-br ${p1Config.bgGradient} border ${p1Config.borderColor} rounded-lg p-2`}>
+          <div className={`bg-gradient-to-br ${p1Config.bgGradient} dark:from-gray-700 dark:to-gray-800 border ${p1Config.borderColor} dark:border-gray-600 rounded-lg p-2`}>
             <div className="flex items-center gap-1.5">
-              <P1Icon className={`w-3 h-3 ${p1Config.iconColor}`} />
-              <span className="text-xs font-medium text-gray-800">{platform1Status}</span>
+              <P1Icon className={`w-3 h-3 ${p1Config.iconColor} dark:text-gray-300`} />
+              <span className="text-xs font-medium text-gray-800 dark:text-gray-200">{platform1Status}</span>
             </div>
           </div>
         </motion.div>
@@ -172,35 +172,35 @@ export default function ComparisonView({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-3 border border-indigo-200"
+        className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-3 border border-indigo-200 dark:border-indigo-800"
       >
-        <h3 className="text-xs font-bold text-gray-800 mb-2">비교 결과</h3>
+        <h3 className="text-xs font-bold text-gray-800 dark:text-gray-200 mb-2">비교 결과</h3>
         <div className="grid grid-cols-2 gap-2">
-          <div className="bg-white rounded p-2 border border-gray-200">
-            <div className="text-xs text-gray-600 mb-0.5">정산금액 차이</div>
+          <div className="bg-white dark:bg-gray-800 rounded p-2 border border-gray-200 dark:border-gray-700">
+            <div className="text-xs text-gray-600 dark:text-gray-400 mb-0.5">정산금액 차이</div>
             <div
               className={`text-sm font-bold ${
-                payoutDiff > 0 ? "text-green-600" : payoutDiff < 0 ? "text-red-600" : "text-gray-600"
+                payoutDiff > 0 ? "text-green-600 dark:text-green-400" : payoutDiff < 0 ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-gray-400"
               }`}
             >
               {payoutDiff > 0 ? "+" : ""}
               {formatCurrency(payoutDiff)}
             </div>
-            <div className="text-xs text-gray-500 mt-0.5">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               {PLATFORM_NAMES[platform1]} 기준
             </div>
           </div>
-          <div className="bg-white rounded p-2 border border-gray-200">
-            <div className="text-xs text-gray-600 mb-0.5">마진율 차이</div>
+          <div className="bg-white dark:bg-gray-800 rounded p-2 border border-gray-200 dark:border-gray-700">
+            <div className="text-xs text-gray-600 dark:text-gray-400 mb-0.5">마진율 차이</div>
             <div
               className={`text-sm font-bold ${
-                marginDiff > 0 ? "text-green-600" : marginDiff < 0 ? "text-red-600" : "text-gray-600"
+                marginDiff > 0 ? "text-green-600 dark:text-green-400" : marginDiff < 0 ? "text-red-600 dark:text-red-400" : "text-gray-600 dark:text-gray-400"
               }`}
             >
               {marginDiff > 0 ? "+" : ""}
               {formatPercent(marginDiff)}
             </div>
-            <div className="text-xs text-gray-500 mt-0.5">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               {PLATFORM_NAMES[platform1]} 기준
             </div>
           </div>
