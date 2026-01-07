@@ -2,14 +2,13 @@ import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://seller-margin-lab.vercel.app'
-  const now = new Date()
   
   return [
     {
       url: baseUrl,
-      lastModified: now.toISOString(),
+      lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 1,
+      priority: 1.0,
     },
   ]
 }
