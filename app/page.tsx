@@ -238,9 +238,9 @@ function HomeContent() {
         const jsonString = event.target?.result as string;
         const imported = importFromJSON(jsonString);
         
-        if (imported) {
+        if (imported && imported.inputData) {
           setState({
-            platform: imported.platform as Platform | "compare",
+            platform: (imported.platform as Platform | "compare") || state.platform,
             inputData: imported.inputData,
           });
           toast.success("JSON 파일을 가져왔습니다");

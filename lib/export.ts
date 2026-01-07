@@ -120,3 +120,53 @@ export function exportScenariosToCSV(
   document.body.removeChild(link);
 }
 
+/**
+ * JSON으로 데이터 내보내기
+ */
+export function downloadJSON(
+  inputData: InputData,
+  result: CalculationResult,
+  platform: string,
+  filename?: string
+): void {
+  const data = {
+    platform,
+    inputData,
+    result,
+    exportedAt: new Date().toISOString(),
+  };
+
+  const jsonString = JSON.stringify(data, null, 2);
+  const blob = new Blob([jsonString], { type: "application/json" });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename || `margin-calc-${Date.now()}.json`);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
+ * JSON 파일에서 데이터 가져오기
+ */
+export function importFromJSON(jsonString: string): {
+  platform?: string;
+  inputData?: InputData;
+  result?: CalculationResult;
+} | null {
+  try {
+    const data = JSON.parse(jsonString);
+    return {
+      platform: data.platform,
+      inputData: data.inputData,
+      result: data.result,
+    };
+  } catch (error) {
+    console.error("JSON 파싱 에러:", error);
+    return null;
+  }
+}
+
