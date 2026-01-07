@@ -15,6 +15,7 @@ export default function TargetMarginCalculator({ inputData }: TargetMarginCalcul
 
   const targetPrice = calculateTargetPrice(
     {
+      receivedShipping: inputData.receivedShipping,
       cost: inputData.cost,
       shipOut: inputData.shipOut,
       packaging: inputData.packaging,
@@ -22,6 +23,12 @@ export default function TargetMarginCalculator({ inputData }: TargetMarginCalcul
       otherVariable: inputData.otherVariable,
       returnRate: inputData.returnRate,
       returnShipBack: inputData.returnShipBack,
+      baseFeeRate: inputData.baseFeeRate,
+      linkageFeeRate: inputData.linkageFeeRate,
+      shippingFeeRate: inputData.shippingFeeRate,
+      taxType: inputData.taxType,
+      vatRate: inputData.vatRate,
+      // 하위 호환
       platformFeeRate: inputData.platformFeeRate,
       paymentFeeRate: inputData.paymentFeeRate,
       extraFeeRate: inputData.extraFeeRate,

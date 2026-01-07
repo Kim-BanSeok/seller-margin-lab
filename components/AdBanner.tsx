@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: any[] & { loaded?: boolean };
   }
 }
 
@@ -47,7 +47,7 @@ export default function AdBanner({ className = "" }: AdBannerProps) {
 
     function initializeAd() {
       try {
-        if (window.adsbygoogle && window.adsbygoogle.loaded) {
+        if (window.adsbygoogle && (window.adsbygoogle as any).loaded) {
           setIsLoaded(true);
           return;
         }

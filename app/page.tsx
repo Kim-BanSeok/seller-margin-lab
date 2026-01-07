@@ -77,10 +77,15 @@ function HomeContent() {
         otherVariable: 0,
         returnRate: 0,
         returnShipBack: 0,
+        baseFeeRate: defaultPreset.baseFeeRate,
+        linkageFeeRate: defaultPreset.linkageFeeRate,
+        shippingFeeRate: defaultPreset.shippingFeeRate,
+        taxType: "general",
+        vatRate: 10,
+        // 하위 호환
         platformFeeRate: defaultPreset.platformFeeRate,
         paymentFeeRate: defaultPreset.paymentFeeRate,
         extraFeeRate: defaultPreset.extraFeeRate,
-        shippingFeeRate: defaultPreset.shippingFeeRate,
       },
     };
   };
@@ -187,10 +192,15 @@ function HomeContent() {
         otherVariable: 0,
         returnRate: 0,
         returnShipBack: 0,
+        baseFeeRate: defaultPreset.baseFeeRate,
+        linkageFeeRate: defaultPreset.linkageFeeRate,
+        shippingFeeRate: defaultPreset.shippingFeeRate,
+        taxType: "general",
+        vatRate: 10,
+        // 하위 호환
         platformFeeRate: defaultPreset.platformFeeRate,
         paymentFeeRate: defaultPreset.paymentFeeRate,
         extraFeeRate: defaultPreset.extraFeeRate,
-        shippingFeeRate: defaultPreset.shippingFeeRate,
       },
     });
   };
@@ -451,9 +461,9 @@ function HomeContent() {
                   linkageFeeRate: state.inputData.linkageFeeRate,
                   shippingFeeRate: state.inputData.shippingFeeRate || 0,
                   // 하위 호환
-                  platformFeeRate: state.inputData.platformFeeRate,
-                  paymentFeeRate: state.inputData.paymentFeeRate,
-                  extraFeeRate: state.inputData.extraFeeRate,
+                  platformFeeRate: state.inputData.platformFeeRate ?? 0,
+                  paymentFeeRate: state.inputData.paymentFeeRate ?? 0,
+                  extraFeeRate: state.inputData.extraFeeRate ?? 0,
                 }}
                 onSelect={handleSelectPreset}
                 onClose={() => setActiveFeatureTab("main")}
