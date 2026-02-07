@@ -1,6 +1,7 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { TrendingUp, BookOpen } from "lucide-react";
 import Logo from "./Logo";
 
 export default function Header() {
@@ -15,6 +16,14 @@ export default function Header() {
       <p className="text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs flex items-center gap-1 sm:gap-1.5 ml-12 sm:ml-10 leading-tight">
         <TrendingUp className="w-3 h-3 flex-shrink-0" />
         <span className="truncate">실마진 계산 · 플랫폼 비교 · 손익분기 분석</span>
+        <Link
+          href="/guide"
+          className="inline-flex items-center gap-1 ml-1 sm:ml-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors shrink-0"
+          title="실마진 계산 가이드"
+        >
+          <BookOpen className="w-3 h-3" />
+          <span>가이드</span>
+        </Link>
       </p>
     </div>
   );

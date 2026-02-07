@@ -443,19 +443,14 @@ function HomeContent() {
           </div>
 
           {activeFeatureTab === "history" && (
-            <>
-              <AdBanner className="mb-3" />
-              <HistoryPanel
+            <HistoryPanel
                 onLoad={handleLoadCalculation}
                 onClose={() => setActiveFeatureTab("main")}
               />
-            </>
           )}
 
           {activeFeatureTab === "preset" && (
-            <>
-              <AdBanner className="mb-3" />
-              <CustomPresetManager
+            <CustomPresetManager
                 currentFees={{
                   baseFeeRate: state.inputData.baseFeeRate,
                   linkageFeeRate: state.inputData.linkageFeeRate,
@@ -468,7 +463,6 @@ function HomeContent() {
                 onSelect={handleSelectPreset}
                 onClose={() => setActiveFeatureTab("main")}
               />
-            </>
           )}
 
           {!isCompareMode && (
@@ -516,38 +510,23 @@ function HomeContent() {
                 )}
 
                 {activeFeatureTab === "target" && (
-                  <>
-                    <AdBanner className="mb-3" />
-                    <TargetMarginCalculator inputData={state.inputData} />
-                  </>
+                  <TargetMarginCalculator inputData={state.inputData} />
                 )}
 
                 {activeFeatureTab === "simulation" && (
-                  <>
-                    <AdBanner className="mb-3" />
-                    <SalesSimulation inputData={state.inputData} />
-                  </>
+                  <SalesSimulation inputData={state.inputData} />
                 )}
 
                 {activeFeatureTab === "forecast" && (
-                  <>
-                    <AdBanner className="mb-3" />
-                    <MonthlyForecast inputData={state.inputData} />
-                  </>
+                  <MonthlyForecast inputData={state.inputData} />
                 )}
 
                 {activeFeatureTab === "roi" && (
-                  <>
-                    <AdBanner className="mb-3" />
-                    <ROICalculator inputData={state.inputData} />
-                  </>
+                  <ROICalculator inputData={state.inputData} />
                 )}
 
                 {activeFeatureTab === "scenario" && (
-                  <>
-                    <AdBanner className="mb-3" />
-                    <ScenarioCompare baseInputData={state.inputData} />
-                  </>
+                  <ScenarioCompare baseInputData={state.inputData} />
                 )}
               </div>
             </div>
