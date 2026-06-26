@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Script from "next/script";
 import "./globals.css";
 
@@ -109,7 +110,35 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-        {children}
+        <main className="min-h-screen">
+          <section className="border-b border-blue-100/80 bg-white/75 backdrop-blur dark:border-gray-800 dark:bg-gray-900/75">
+            <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div className="max-w-3xl space-y-1.5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-blue-600 dark:text-blue-400">
+                    Seller Margin Lab
+                  </p>
+                  <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 sm:text-base">
+                    온라인 셀러를 위한 실마진 계산과 수익성 분석
+                  </h2>
+                  <p className="text-xs leading-5 text-gray-600 dark:text-gray-400 sm:text-sm">
+                    플랫폼 수수료, 부가세, 광고비, 반품비를 반영해 실제 손익을 계산합니다. 계산 기준과
+                    수수료 해석은 가이드에서 함께 확인할 수 있습니다.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/guide"
+                    className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-blue-700"
+                  >
+                    계산 가이드 보기
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+          {children}
+        </main>
       </body>
     </html>
   );

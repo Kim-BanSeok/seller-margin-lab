@@ -491,8 +491,6 @@ function HomeContent() {
 
                       <AlertSystem result={currentResult} status={currentStatus} />
 
-                      <AdBanner className="my-3" />
-
                       <FormulaGuide />
 
                       <BreakdownTable result={currentResult} inputData={state.inputData} />
@@ -506,6 +504,8 @@ function HomeContent() {
                       platform={state.platform as Platform}
                       reportRef={reportRef}
                     />
+
+                    <AdBanner className="mt-3" />
                   </>
                 )}
 
@@ -582,9 +582,9 @@ function HomeContent() {
                     />
                   </motion.div>
 
-                  <AdBanner className="my-3" />
-
                   <ChartSection result={currentResult} salePrice={state.inputData.salePrice} />
+
+                  <AdBanner className="mt-3" />
                 </div>
               </div>
             </div>
